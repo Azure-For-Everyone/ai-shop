@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import axios from "axios";
+import { PhotoIcon } from '@heroicons/react/24/solid'
 const FileUpload = (props: any) => {
   const [fileList, setFileList] = useState<File[] | null>(null);
   const [uploadedFileList, setUploadedFileList] = useState<File[] | null>(null);
@@ -12,11 +13,15 @@ const FileUpload = (props: any) => {
     e.preventDefault();
     e.stopPropagation();
   };
+
+
   const handleUpload = async () => {
+
     const UPLOAD_URL = "http://localhost:8080/upload";
+    //const UPLOAD_URL = "https://ca-api-gateway-prod-eus.grayforest-03a8c5c7.eastus.azurecontainerapps.io/item-info";
     const data = new FormData();
     for (let file of fileList!) {
-      data.append("file", file);
+      data.append("image", file);
     }
     await axios.post(UPLOAD_URL, data, {
       onUploadProgress(e) {
@@ -28,9 +33,17 @@ const FileUpload = (props: any) => {
           //setFileList(null);
           if (props.setData) {
             props.setData({
-              brand: "Nike",
-              model: "Air Max 90",
-              confidence: 0.99, 
+                "label": "Not Allowed - Toy Water Gun",
+                "brand": "Unknown",
+                "model": "Unknown",
+                "category": {
+                    "category": "Restricted",
+                    "subcategory": "Weapons",
+                    "level2Subcategory": "Toy Weapons"
+                },
+                "condition": "New",
+                "price": -1.0,
+                "description": "This item is a toy water gun, which is not allowed to be sold due to restrictions on the sale of items that resemble weapons. The item is new and has never been used. It features two water tanks and a trigger mechanism for squirting water. Despite being a toy, it is categorized under items that are restricted for sale."
             });
           }
         }
@@ -39,95 +52,93 @@ const FileUpload = (props: any) => {
   };
   const uploading = progress > 0 && progress < 100;
   return (
-    <div
-      className={classNames({
-        "purple-border": true,
-        "w-full h-96": true,
-        "p-4 grid place-content-center cursor-pointer": true,
-        "text-violet-500 rounded-lg": true,
-        "border-4 border-dashed ": true,
-        "transition-colors": true,
-        "border-violet-500 bg-violet-100": shouldHighlight,
-        "border-violet-100 bg-violet-50": !shouldHighlight,
-      })}
-      onDragOver={(e) => {
-        preventDefaultHandler(e);
-        setShouldHighlight(true);
-      }}
-      onDragEnter={(e) => {
-        preventDefaultHandler(e);
-        setShouldHighlight(true);
-      }}
-      onDragLeave={(e) => {
-        preventDefaultHandler(e);
-        setShouldHighlight(false);
-      }}
-      onDrop={(e) => {
-        preventDefaultHandler(e);
-        const files = Array.from(e.dataTransfer.files);
-        setFileList(files);
-        setShouldHighlight(false);
-      }}
-    >
-      {!uploaded && 
-        <div className="flex flex-col items-center">
-          {!fileList ? (
-            <>
-              <CloudArrowUpIcon className="w-10 h-10" />
-              <span>
-                <span>Choose a File</span> or drag it here
-              </span>
-            </>
-          ) : (
-            <>
-              <p>Files to Upload</p>
-              {fileList.map((file, i) => {
-                return <div>
-                  <img src={URL.createObjectURL(file)} alt={file.name} className="w-20 h-20" />
-                  <span key={i}>{file.name}</span>
-                  </div>;
-              })}
-              <div className="flex gap-2 mt-2">
-                <button
-                  className={classNames({
-                    "bg-violet-500 text-violet-50 px-2 py-1 rounded-md": true,
-                    "pointer-events-none opacity-40 w-full": uploading,
+    <div>
+      <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10" 
+        onDragOver={(e) => {
+          preventDefaultHandler(e);
+          setShouldHighlight(true);
+        }}
+        onDragEnter={(e) => {
+          preventDefaultHandler(e);
+          setShouldHighlight(true);
+        }}
+        onDragLeave={(e) => {
+          preventDefaultHandler(e);
+          setShouldHighlight(false);
+        }}
+        onDrop={(e) => {
+          preventDefaultHandler(e);
+          const files = Array.from(e.dataTransfer.files);
+          setFileList(files);
+          setShouldHighlight(false);
+        }}
+      >
+        { uploaded }
+        { !uploaded && <div className="text-center">
+         
+
+          { !fileList ? ( <>
+            <PhotoIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
+            <div className="mt-4 flex text-sm leading-6 text-gray-600">
+              <label
+                htmlFor="file-upload"
+                className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+              >
+                <span>Upload a file</span>
+              </label>
+              <p className="pl-1">or drag and drop</p>
+            </div>
+            <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+              <input id="file-upload" name="file-upload" type="file" className="sr-only" multiple onChange={(e) => {
+                if (e.target.files) {
+                  setFileList(Array.from(e.target.files));
+                }
+              }} />
+              </>
+                ) :(
+                <>
+                  {fileList.map((file, i) => {
+                    return <div>
+                      <img src={URL.createObjectURL(file)} alt={file.name} className="w-30 h-30" />
+                      </div>;
                   })}
-                  onClick={() => {
-                    handleUpload();
-                  }}
-                >
-                  {uploading
-                    ? `Uploading...  ( ${progress.toFixed(2)}% )`
-                    : "Upload"}
-                </button>
-                {!uploading && (
-                  <button
-                    className="border border-violet-500 px-2 py-1 rounded-md"
-                    onClick={() => {
-                      setFileList(null);
-                    }}
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-            </>
-          )}
-        </div>
-    }
-
-  {uploaded && uploadedFileList &&
-              <div className="flex flex-col items-center">
-                
-                {uploadedFileList.map((file, i) => {
-                  return <div>
-                    <img src={URL.createObjectURL(file)} alt={file.name} className="h-80" />
-                    </div>;
-                })}
-
-              </div>
-            }
+                  <div className="flex gap-2 mt-2 justify-center pt-8">
+                    <button
+                      className={classNames({
+                        "bg-violet-500 text-violet-50 px-2 py-1 rounded-md": true,
+                        "pointer-events-none opacity-40 w-full": uploading,
+                      })}
+                      onClick={() => {
+                        handleUpload();
+                      }}
+                    >
+                      {uploading
+                        ? `Uploading...  ( ${progress.toFixed(2)}% )`
+                        : "Upload"}
+                    </button>
+                    {!uploading && (
+                      <button
+                        className="border border-violet-500 px-2 py-1 rounded-md"
+                        onClick={() => {
+                          setFileList(null);
+                        }}
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
+        </div> }
+        {uploaded && uploadedFileList && <div className="flex flex-col items-center">
+            {uploadedFileList.map((file, i) => {
+              return <div>
+                <img src={URL.createObjectURL(file)} alt={file.name} className="h-80" />
+                </div>;
+            })}
+            </div>
+          }
+      </div> 
     </div>
   );
 };
