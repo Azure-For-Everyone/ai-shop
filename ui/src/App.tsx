@@ -14,6 +14,7 @@ interface Data {
     subcategory: string;
     level2Subcategory: string;
   };
+  price: number;
 }
 
 function App() {
@@ -55,7 +56,7 @@ function App() {
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-1">
                 <div className="sm:col-span-2">
                   <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
-                    label
+                    Name
                   </label>
                   <div className="mt-2">
                     <input
@@ -98,6 +99,23 @@ function App() {
                       type="email"
                       autoComplete="email"
                       value={data.model}
+                      className="block w-full rounded-md border-0 py-1.5  px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+
+
+                <div className="sm:col-span-2">
+                  <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                    Price
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      value={data.price}
                       className="block w-full rounded-md border-0 py-1.5  px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -201,7 +219,7 @@ function App() {
               
             </div> }
 
-            { data && <div className="border-b border-gray-900/10 pb-12 pt-12">
+            { data && <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">Item categories</h2>
               <p className="mt-1 text-sm leading-6 text-gray-600">Select the categories the item belongs too</p>
 
@@ -216,10 +234,11 @@ function App() {
                       id="country"
                       name="country"
                       autoComplete="country-name"
-                      value={data.category.category}
+                      defaultValue={data.category.category}
                       className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
                       <option>United States</option>
+                      <option value="Restricted">Restricted</option>
                       <option>Canada</option>
                       <option>Mexico</option>
                     </select>
@@ -236,13 +255,13 @@ function App() {
                       id="country"
                       name="country"
                       autoComplete="country-name"
-                      value={data.category.subcategory}
+                      defaultValue={data.category.subcategory}
                       className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
                       <option>United States</option>
                       <option>Canada</option>
                       <option>Mexico</option>
-                      <option value={'Restricted'}>United States</option>
+                      <option value="Weapons">Weapons</option>
                     </select>
                   </div>
                 </div>
@@ -297,23 +316,7 @@ function App() {
                         <label htmlFor="comments" className="font-medium text-gray-900">
                           Comments
                         </label>
-                        <p className="text-gray-500">Get notified when someones posts a comment on a posting.</p>
-                      </div>
-                    </div>
-                    <div className="relative flex gap-x-3">
-                      <div className="flex h-6 items-center">
-                        <input
-                          id="candidates"
-                          name="candidates"
-                          type="checkbox"
-                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        />
-                      </div>
-                      <div className="text-sm leading-6">
-                        <label htmlFor="candidates" className="font-medium text-gray-900">
-                          Candidates
-                        </label>
-                        <p className="text-gray-500">Get notified when a candidate applies for a job.</p>
+                        <p className="text-gray-500">Get notified when someones posts a comment on your add.</p>
                       </div>
                     </div>
                     <div className="relative flex gap-x-3">
@@ -329,7 +332,7 @@ function App() {
                         <label htmlFor="offers" className="font-medium text-gray-900">
                           Offers
                         </label>
-                        <p className="text-gray-500">Get notified when a candidate accepts or rejects an offer.</p>
+                        <p className="text-gray-500">Get notified when a user submits an offer.</p>
                       </div>
                     </div>
                   </div>

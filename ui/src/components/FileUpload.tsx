@@ -17,38 +17,43 @@ const FileUpload = (props: any) => {
 
   const handleUpload = async () => {
 
-    const UPLOAD_URL = "http://localhost:8080/upload";
-    //const UPLOAD_URL = "https://ca-api-gateway-prod-eus.grayforest-03a8c5c7.eastus.azurecontainerapps.io/item-info";
+    //const UPLOAD_URL = "http://localhost:8080/upload";
+    const UPLOAD_URL = "https://ca-api-gateway-prod-eus.grayforest-03a8c5c7.eastus.azurecontainerapps.io/item-info";
     const data = new FormData();
     for (let file of fileList!) {
       data.append("image", file);
     }
-    await axios.post(UPLOAD_URL, data, {
+    let result = await axios.post(UPLOAD_URL, data, {
       onUploadProgress(e) {
         const progress = e.progress ?? 0;
         setProgress(progress * 100);
         if (progress * 100 >= 100) {
-          setUploaded(true);
-          setUploadedFileList(fileList);
-          //setFileList(null);
-          if (props.setData) {
-            props.setData({
-                "label": "Not Allowed - Toy Water Gun",
-                "brand": "Unknown",
-                "model": "Unknown",
-                "category": {
-                    "category": "Restricted",
-                    "subcategory": "Weapons",
-                    "level2Subcategory": "Toy Weapons"
-                },
-                "condition": "New",
-                "price": -1.0,
-                "description": "This item is a toy water gun, which is not allowed to be sold due to restrictions on the sale of items that resemble weapons. The item is new and has never been used. It features two water tanks and a trigger mechanism for squirting water. Despite being a toy, it is categorized under items that are restricted for sale."
-            });
-          }
+          
         }
-      },
+      }
     });
+
+    result = result.data;
+    
+    setUploaded(true);
+    setUploadedFileList(fileList);
+    //setFileList(null);
+    if (props.setData) {
+      /*props.setData({
+          "label": "Not Allowed - Toy Water Gun",
+          "brand": "Unknown",
+          "model": "Unknown",
+          "category": {
+              "category": "Restricted",
+              "subcategory": "Weapons",
+              "level2Subcategory": "Toy Weapons"
+          },
+          "condition": "New",
+          "price": -1.0,
+          "description": "This item is a toy water gun, which is not allowed to be sold due to restrictions on the sale of items that resemble weapons. The item is new and has never been used. It features two water tanks and a trigger mechanism for squirting water. Despite being a toy, it is categorized under items that are restricted for sale."
+      });*/
+      props.setData(result);
+    }
   };
   const uploading = progress > 0 && progress < 100;
   return (
