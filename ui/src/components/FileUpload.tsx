@@ -3,6 +3,16 @@ import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import axios from "axios";
 import { PhotoIcon } from '@heroicons/react/24/solid'
+
+// Extend the Window interface
+declare global {
+  interface Window {
+    _env_: {
+      REACT_APP_API_URL: string;
+    };
+  }
+}
+
 const FileUpload = (props: any) => {
   const [fileList, setFileList] = useState<File[] | null>(null);
   const [uploadedFileList, setUploadedFileList] = useState<File[] | null>(null);
@@ -18,7 +28,14 @@ const FileUpload = (props: any) => {
   const handleUpload = async () => {
 
     //const UPLOAD_URL = "http://localhost:8080/upload";
-    const UPLOAD_URL = "https://ca-api-gateway-prod-eus.grayforest-03a8c5c7.eastus.azurecontainerapps.io/item-info";
+    // Use the extended Window interface
+    if (!window._env_) {
+      window._env_ = {
+        REACT_APP_API_URL: "http://localhost:8080/upload",
+      };
+    }
+    const UPLOAD_URL = window._env_.REACT_APP_API_URL;
+
     const data = new FormData();
     for (let file of fileList!) {
       data.append("image", file);
@@ -39,7 +56,7 @@ const FileUpload = (props: any) => {
     setUploadedFileList(fileList);
     //setFileList(null);
     if (props.setData) {
-      /*props.setData({
+      props.setData({
           "label": "Not Allowed - Toy Water Gun",
           "brand": "Unknown",
           "model": "Unknown",
@@ -51,8 +68,8 @@ const FileUpload = (props: any) => {
           "condition": "New",
           "price": -1.0,
           "description": "This item is a toy water gun, which is not allowed to be sold due to restrictions on the sale of items that resemble weapons. The item is new and has never been used. It features two water tanks and a trigger mechanism for squirting water. Despite being a toy, it is categorized under items that are restricted for sale."
-      });*/
-      props.setData(result);
+      });
+      //props.setData(result);
     }
   };
   const uploading = progress > 0 && progress < 100;

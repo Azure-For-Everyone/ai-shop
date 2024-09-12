@@ -1,6 +1,7 @@
 import './App.css';
 import FileUpload from './components/FileUpload';
 import { useState } from 'react';
+import { categories, subcategories, subsubcategories } from './categories';
 // Create a data type that we will get back from the API
 
 interface Data {
@@ -37,6 +38,11 @@ function App() {
           </div>
         </div>
         <div className="container mx-auto p-12 bg-white rounded-lg shadow-lg my-20">
+
+        { data && data.category && data.category.category === "Restricted" && <div className="mb-4  p-4 border border-red-400 text-red-700 bg-red-100 rounded">
+                <p>This item is restricted to sell.</p>
+              </div> }
+
         <div>
           <div className="space-y-12">
             <div className="border-gray-900/10">
@@ -52,7 +58,7 @@ function App() {
             { data && <div className="border-b border-t border-gray-900/10 pb-12 pt-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">Item Information</h2>
               <p className="mt-1 text-sm leading-6 text-gray-600">Provide a basic description of the item</p>
-
+              
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-1">
                 <div className="sm:col-span-2">
                   <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
@@ -237,10 +243,11 @@ function App() {
                       defaultValue={data.category.category}
                       className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
-                      <option>United States</option>
-                      <option value="Restricted">Restricted</option>
-                      <option>Canada</option>
-                      <option>Mexico</option>
+                        {categories && categories.map(category => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                        ))}
                     </select>
                   </div>
                 </div>
@@ -258,10 +265,11 @@ function App() {
                       defaultValue={data.category.subcategory}
                       className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
-                      <option>United States</option>
-                      <option>Canada</option>
-                      <option>Mexico</option>
-                      <option value="Weapons">Weapons</option>
+                       {subcategories && subcategories.map(category => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                        ))}
                     </select>
                   </div>
                 </div>
@@ -279,9 +287,11 @@ function App() {
                       value={data.category.level2Subcategory}
                       className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
-                      <option>United States</option>
-                      <option>Canada</option>
-                      <option>Mexico</option>
+                      {subsubcategories && subsubcategories.map(category => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                        ))}
                     </select>
                   </div>
                 </div>
